@@ -2,13 +2,13 @@ import "dotenv/config";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json";
-import { getHistoricalBalance } from "./services/getHistoricalBalances";
+import { getHistoricalBalances } from "./services/getHistoricalBalances";
 
 const app = express();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.get("/historical-balances", (req, res) => {
-  const historicalBalance = getHistoricalBalance();
+app.get("/historical-balances", async (req, res) => {
+  const historicalBalance = await getHistoricalBalances();
   return res.json(historicalBalance);
 });
 
