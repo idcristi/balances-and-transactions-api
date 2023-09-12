@@ -12,8 +12,14 @@ app.get(
   "/historical-balances",
   validatorHistoryBalance,
   async (req: Request, res: Response) => {
-    const historicalBalance = await getHistoricalBalances();
-    return res.json(historicalBalance);
+    try {
+      const { from, to, sort } = req.query;
+      //@ts-ignore
+      const historicalBalances = await getHistoricalBalances(from, to, sort);
+      return res.json(historicalBalances);
+    } catch (error) {
+      return res.status(400).json({ error: (error as Error).message });
+    }
   }
 );
 
