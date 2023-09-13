@@ -1,10 +1,11 @@
 import "dotenv/config";
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json";
 import { getHistoricalBalances } from "./services/getHistoricalBalances";
 import { validatorHistoryBalance } from "./utils/validator";
 import { SortEnum } from "./utils/enums";
+import logger from "./utils/logger";
 
 const app = express();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -23,8 +24,10 @@ app.get(
         toDate,
         sort as SortEnum
       );
+      logger.info("Historical balances retrieved successfully.");
       return res.json(historicalBalances);
     } catch (error) {
+      logger.error("An error occurred:", error);
       return res.status(400).json({ error: (error as Error).message });
     }
   }
